@@ -70,4 +70,14 @@ viewDepartments = () => {
 // Function to view all roles
 const viewRoles = () => {
     console.log('Viewing all roles...\n');
-}
+    const sql = `SELECT roles.id, roles.title, department.names AS department
+                FROM roles
+                INNER JOIN department ON role.department_id = department.id `;
+    db.query(mysql, (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        promptUser();
+    });
+};
+
+// Function to view all employees
