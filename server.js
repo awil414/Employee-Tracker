@@ -113,11 +113,45 @@ const addDepartment = () => {
     ])
     .then((answer) => {
         const mysql = `INSERT INTO department SET ?`;
-        db.query(mysql, answer.names, (err,res) => {
+        db.query(mysql, answer, (err,res) => {
             if (err) throw err;
-            console.log('Added' + answer.names + ' to departments.');
+            console.log('Added' + answer.names+ ' to departments.');
 
-            viewDepartments();
+            promptUser();
         });
     });
 };
+
+// Function to add a role to database
+const addRole = () => {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'title',
+            message: 'What role would you like to add?',
+        },
+        {
+            type: 'input',
+            name: 'salary',
+            message: 'What salary would you like to add?',
+        },
+        {
+            type: 'input',
+            name: 'department_id',
+            message: 'Enter the department for this new role.',
+        },
+    ])
+    .then((answer) => {
+        const params = [answer.title, answer.salary, answer.department_id];
+        const mysql = `INSERT INTO roles SET ?`;
+        db.query(mysql, params, (err, res) => {
+            if (err) throw err;
+            console.log('Added' + answer.title + ' to roles.');
+            
+            promptUser();
+        });
+    });
+
+
+
+}
