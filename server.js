@@ -70,9 +70,9 @@ viewDepartments = () => {
 // Function to view all roles
 const viewRoles = () => {
     console.log('Viewing all roles...\n');
-    const sql = `SELECT roles.id, roles.title, department.names AS department
+    const mysql = `SELECT roles.id, roles.title, department.names AS department
                 FROM roles
-                INNER JOIN department ON role.department_id = department.id `;
+                INNER JOIN department ON roles.department_id = department.id `;
     db.query(mysql, (err, res) => {
         if (err) throw err;
         console.table(res);
@@ -81,3 +81,17 @@ const viewRoles = () => {
 };
 
 // Function to view all employees
+const viewEmployees = () => {
+    console.log('Viewing all employees...\n');
+    const mysql = `SELECT employee.id, employee.first_name, employee.last_name, roles.title, department.names AS department, roles.salary,
+                CONCAT(mgr.first_name, mgr.last_name) AS manager
+                FROM employee
+                INNER JOIN roles ON employee.role_id = roles.id 
+                INNER JOIN department ON roles.department_id = department.id
+                INNER JOIN employee mgr ON employee.manager_id = mgr.id`;
+    db.query(mysql, (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        promptUser();
+    });
+};
