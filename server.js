@@ -151,7 +151,44 @@ const addRole = () => {
             promptUser();
         });
     });
+};
+
+    // Function to add employee to database
+    const addEmployee = () => {
+        inquirer.prompt([
+            {
+                type: 'input',
+                name: 'first_name',
+                message: 'Enter new employee first name.',
+            },
+            {
+                type: 'input',
+                name: 'last_name',
+                message: 'Enter new employee last name.',
+            },
+            {
+                type: 'inpt',
+                name: 'role_id',
+                message: 'Enter new employee role.',
+            },
+            {
+                type: 'input',
+                name: 'manager_id',
+                message: "Who is the employee's manager?",
+            },
+        ])
+        .then((answer) => {
+            const mysql = `INSERT INTO employee SET ?`;
+            db.query(mysql, answer, (err, res) => {
+                if (err) throw err;
+                console.log('Added' + answer.first_name + ' into the database.');
+
+                promptUser();
+            });
+        });
+    };
+
+// Function to update employee 
 
 
 
-}
