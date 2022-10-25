@@ -14,11 +14,11 @@ const db = mysql.createConnection(
         database: 'employee_db',
     },
     console.log('Connected to the employee_db database.')
-    );
+);
 
 // Function to begin user prompts
 const promptUser = () => {
-    inquirer.prompt ([
+    inquirer.prompt([
         {
             type: 'list',
             name: 'choices',
@@ -35,25 +35,25 @@ const promptUser = () => {
             ],
         },
     ])
-    .then((answers) => {
-        if (answers.choices === 'View all departments') {
-            viewDepartments();
-        } else if (answers.choices === 'View all roles') {
-            viewRoles();
-        } else if (answers.choices === 'View all employees') {      
-            viewEmployees();
-        } else if (answers.choices === 'Add a department') {  
-            addDepartment();
-        } else if (answers.choices === 'Add a role') {  
-            addRole();
-        } else if (answers.choices === 'Add an employee') {  
-            addEmployee();
-        } else if (answers.choices === 'Update an employee role') { 
-            updateEmployee();
-        } else if (answers.choices === 'Done!') { 
-            endPrompt();
-        }
-    });
+        .then((answers) => {
+            if (answers.choices === 'View all departments') {
+                viewDepartments();
+            } else if (answers.choices === 'View all roles') {
+                viewRoles();
+            } else if (answers.choices === 'View all employees') {
+                viewEmployees();
+            } else if (answers.choices === 'Add a department') {
+                addDepartment();
+            } else if (answers.choices === 'Add a role') {
+                addRole();
+            } else if (answers.choices === 'Add an employee') {
+                addEmployee();
+            } else if (answers.choices === 'Update an employee role') {
+                updateEmployee();
+            } else if (answers.choices === 'Done!') {
+                endPrompt();
+            }
+        });
 };
 promptUser();
 
@@ -64,7 +64,7 @@ const viewDepartments = () => {
         if (err) throw err;
         console.table(res);
         promptUser();
-    });  
+    });
 };
 
 // Function to view all roles
@@ -111,15 +111,15 @@ const addDepartment = () => {
             message: 'What department would you like to add?',
         },
     ])
-    .then((answer) => {
-        const mysql = `INSERT INTO department SET ?`;
-        db.query(mysql, answer, (err,res) => {
-            if (err) throw err;
-            console.log('Added' + answer.names+ ' to departments.');
+        .then((answer) => {
+            const mysql = `INSERT INTO department SET ?`;
+            db.query(mysql, answer, (err, res) => {
+                if (err) throw err;
+                console.log('Added' + answer.names + ' to departments.');
 
-            promptUser();
+                promptUser();
+            });
         });
-    });
 };
 
 // Function to add a role to database
@@ -141,42 +141,42 @@ const addRole = () => {
             message: 'Enter the department for this new role.',
         },
     ])
-    .then((answer) => {
-        const params = [answer.title, answer.salary, answer.department_id];
-        const mysql = `INSERT INTO roles SET ?`;
-        db.query(mysql, params, (err, res) => {
-            if (err) throw err;
-            console.log('Added' + answer.title + ' to roles.');
-            
-            promptUser();
+        .then((answer) => {
+            const params = [answer.title, answer.salary, answer.department_id];
+            const mysql = `INSERT INTO roles SET ?`;
+            db.query(mysql, params, (err, res) => {
+                if (err) throw err;
+                console.log('Added' + answer.title + ' to roles.');
+
+                promptUser();
+            });
         });
-    });
 };
 
-    // Function to add employee to database
-    const addEmployee = () => {
-        inquirer.prompt([
-            {
-                type: 'input',
-                name: 'first_name',
-                message: 'Enter new employee first name.',
-            },
-            {
-                type: 'input',
-                name: 'last_name',
-                message: 'Enter new employee last name.',
-            },
-            {
-                type: 'inpt',
-                name: 'role_id',
-                message: 'Enter new employee role.',
-            },
-            {
-                type: 'input',
-                name: 'manager_id',
-                message: "Who is the employee's manager?",
-            },
-        ])
+// Function to add employee to database
+const addEmployee = () => {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'first_name',
+            message: 'Enter new employee first name.',
+        },
+        {
+            type: 'input',
+            name: 'last_name',
+            message: 'Enter new employee last name.',
+        },
+        {
+            type: 'inpt',
+            name: 'role_id',
+            message: 'Enter new employee role.',
+        },
+        {
+            type: 'input',
+            name: 'manager_id',
+            message: "Who is the employee's manager?",
+        },
+    ])
         .then((answer) => {
             const mysql = `INSERT INTO employee SET ?`;
             db.query(mysql, answer, (err, res) => {
@@ -186,7 +186,7 @@ const addRole = () => {
                 promptUser();
             });
         });
-    };
+};
 
 // Function to update employee 
 const updateEmployee = () => {
@@ -197,42 +197,42 @@ const updateEmployee = () => {
             value: employee.id
         }));
 
-    db.query(`SELECT * FROM roles`, (err, res) => {
-        if (err) throw err;
-        const roleData = res.map((role) => ({
-            name: `${role.title}`,
-            value: role.id
-        }));
-
-    inquirer.prompt([
-        {
-            type: 'list',
-            name: 'id',
-            message: 'Which employee would you like to update?',
-            choices: employeeData,
-        },
-        {
-            type: 'list',
-            name: 'role_id',
-            message: 'Select a role to add to employee update.',
-            choices: roleData,
-        },
-    ])
-    .then((answers) => {
-        const mysql = `UPDATE employee SET role_id=? WHERE id=?`;
-
-        db.query(mysql, [answer.role_id, answers.id], (err,res) => {
+        db.query(`SELECT * FROM roles`, (err, res) => {
             if (err) throw err;
-            console.log(res);
+            const roleData = res.map((role) => ({
+                name: `${role.title}`,
+                value: role.id
+            }));
 
-            promptUser();
+            inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'id',
+                    message: 'Which employee would you like to update?',
+                    choices: employeeData,
+                },
+                {
+                    type: 'list',
+                    name: 'role_id',
+                    message: 'Select a role to add to employee update.',
+                    choices: roleData,
+                },
+            ])
+                .then((answers) => {
+                    const mysql = `UPDATE employee SET role_id=? WHERE id=?`;
+
+                    db.query(mysql, [answer.role_id, answers.id], (err, res) => {
+                        if (err) throw err;
+                        console.log(res);
+
+                        promptUser();
+                    });
+                });
         });
     });
-    });
-});
 };
 
-// Function to end prompt
+// Function to end user prompt
 const endPrompt = () => {
     console.log('Congratulations! Your database has been successfully updated.');
 };
