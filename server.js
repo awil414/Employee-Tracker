@@ -70,9 +70,13 @@ const viewDepartments = () => {
 // Function to view all roles
 const viewRoles = () => {
     console.log('Viewing all roles...\n');
-    const mysql = `SELECT roles.id, roles.title, department.names AS department
+    const mysql = `SELECT roles.id, 
+                roles.title, 
+                department.name 
+                AS department
                 FROM roles
-                LEFT JOIN department ON roles.department_id = department.id `;
+                LEFT JOIN department 
+                ON roles.department_id = department.id `;
     db.query(mysql, (err, res) => {
         if (err) throw err;
         console.table(res);
@@ -112,7 +116,7 @@ const addDepartment = () => {
         },
     ])
         .then((answer) => {
-            const mysql = `INSERT INTO department SET ?`;
+            const mysql = `INSERT INTO department (name) VALUES (?)`;
             db.query(mysql, answer, (err, res) => {
                 if (err) throw err;
                 console.log('Added' + answer.names + ' to departments.');
@@ -143,7 +147,7 @@ const addRole = () => {
     ])
         .then((answer) => {
             const params = [answer.title, answer.salary, answer.department_id];
-            const mysql = `INSERT INTO roles SET ?`;
+            const mysql = `SELECT name, id FROM department`;
             db.query(mysql, params, (err, res) => {
                 if (err) throw err;
                 console.log('Added' + answer.title + ' to roles.');
@@ -178,7 +182,7 @@ const addEmployee = () => {
         },
     ])
         .then((answer) => {
-            const mysql = `INSERT INTO employee SET ?`;
+            const mysql = `SELCT roles.id, roles.title FROM role`;
             db.query(mysql, answer, (err, res) => {
                 if (err) throw err;
                 console.log('Added' + answer.first_name + ' into the database.');
