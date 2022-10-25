@@ -56,3 +56,18 @@ const promptUser = () => {
     });
 };
 promptUser();
+
+// Function to view all departments
+viewDepartments = () => {
+    console.log('Viewing all department...\n');
+    db.query(`SELECT * FROM department`, function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        promptUser();
+    });  
+};
+
+// Function to view all roles
+const viewRoles = () => {
+    console.log('Viewing all roles...\n');
+}
