@@ -51,7 +51,7 @@ const promptUser = () => {
         } else if (answers.choices === 'Update an employee role') { 
             updateEmployee();
         } else if (answers.choices === 'Done!') { 
-            EndPrompt();
+            endPrompt();
         }
     });
 };
@@ -189,6 +189,50 @@ const addRole = () => {
     };
 
 // Function to update employee 
+const updateEmployee = () => {
+    db.query(`SELECT * FROM employee`, (err, res) => {
+        if (err) throw err;
+        const employeeData = res.map((employee) => ({
+            name: `${employee.first_name} ${employee.last_name}`,
+            value: employee.id
+        }));
 
+    db.query(`SELECT * FROM roles`, (err, res) => {
+        if (err) throw err;
+        const roleData = res.map((role) => ({
+            name: `${role.title}`,
+            value: role.id
+        }));
 
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'id',
+            message: 'Which employee would you like to update?',
+            choices: employeeData,
+        },
+        {
+            type: 'list',
+            name: 'role_id',
+            message: 'Select a role to add to employee update.',
+            choices: roleData,
+        },
+    ])
+    .then((answers) => {
+        const mysql = `UPDATE employee SET role_id=? WHERE id=?`;
 
+        db.query(mysql, [answer.role_id, answers.id], (err,res) => {
+            if (err) throw err;
+            console.log(res);
+
+            promptUser();
+        });
+    });
+    });
+});
+};
+
+// Function to end prompt
+const endPrompt = () => {
+    console.log('Congratulations! Your database has been successfully updated.');
+};
